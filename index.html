@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Book a call with Parker Marquis</title>
+<style>
+  :root { --navy:#0f2340; --gold:#c9a962; --ink:#1b1f26; --muted:#5f6673; --bg:#f7f5f0; --card:#ffffff; --line:#e4e0d6; --ok:#1f6b47; --err:#9b2c2c; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:520px; margin:0 auto; padding:20px 16px 48px; }
+  .head { display:flex; align-items:center; gap:14px; padding:6px 0 18px; border-bottom:1px solid var(--line); }
+  .mono { width:52px; height:52px; border-radius:50%; background:var(--navy); color:var(--gold); display:flex; align-items:center; justify-content:center; font-family:Georgia,"Times New Roman",serif; font-size:20px; letter-spacing:1px; flex:none; }
+  .who { line-height:1.25; }
+  .who b { display:block; font-size:17px; color:var(--navy); }
+  .who span { font-size:13px; color:var(--muted); }
+  h1 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:26px; color:var(--navy); margin:22px 0 6px; }
+  .sub { color:var(--muted); font-size:15px; margin:0 0 18px; line-height:1.4; }
+  .lbl { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:18px 0 8px; }
+  .days { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch; }
+  .day { flex:none; width:64px; padding:10px 0; border:1px solid var(--line); border-radius:12px; background:var(--card); text-align:center; cursor:pointer; }
+  .day small { display:block; font-size:12px; color:var(--muted); }
+  .day b { display:block; font-size:18px; color:var(--navy); font-weight:600; }
+  .day.on { border-color:var(--navy); background:var(--navy); }
+  .day.on small, .day.on b { color:#fff; }
+  .times { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .t { padding:12px 0; border:1px solid var(--line); border-radius:10px; background:var(--card); text-align:center; font-size:15px; cursor:pointer; color:var(--navy); }
+  .t:active { background:var(--gold); }
+  .f { margin-bottom:12px; }
+  .f label { display:block; font-size:13px; color:var(--muted); margin-bottom:5px; }
+  .f input, .f select { width:100%; font-size:16px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); -webkit-appearance:none; appearance:none; }
+  .f input:focus, .f select:focus { outline:none; border-color:var(--navy); }
+  .btn { width:100%; padding:15px; border:0; border-radius:12px; background:var(--navy); color:#fff; font-size:17px; font-weight:600; cursor:pointer; margin-top:6px; }
+  .btn[disabled] { opacity:.55; cursor:default; }
+  .pick { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:15px; margin:14px 0 14px; line-height:1.4; }
+  .pick b { color:var(--navy); }
+  .msg { font-size:14px; margin-top:10px; min-height:18px; }
+  .msg.err { color:var(--err); }
+  .done { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 18px; margin-top:20px; }
+  .done .check { width:44px; height:44px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:12px; }
+  .done h2 { font-family:Georgia,"Times New Roman",serif; font-weight:500; color:var(--navy); margin:0 0 8px; font-size:22px; }
+  .done p { margin:6px 0; font-size:15px; line-height:1.45; }
+  .foot { margin-top:26px; font-size:12px; color:var(--muted); text-align:center; line-height:1.5; }
+  .hp { position:absolute; left:-9999px; top:-9999px; }
+  .spin { color:var(--muted); font-size:15px; padding:20px 0; }
+  a { color:var(--navy); }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="mono">PM</div>
+    <div class="who"><b>Parker Marquis</b><span>Licensed Life Insurance Agent &middot; NPN 22289941</span></div>
+  </div>
+
+  <div id="step1">
+    <h1>Pick a time for your call.</h1>
+    <p class="sub">Parker will call you at the time you pick. Times are shown in your time zone (<span id="tzname"></span>).</p>
+    <div id="loading" class="spin">Finding open times&hellip;</div>
+    <div id="picker" hidden>
+      <div class="lbl">Day</div>
+      <div class="days" id="days"></div>
+      <div class="lbl">Time</div>
+      <div class="times" id="times"></div>
+    </div>
+  </div>
+
+  <div id="step2" hidden>
+    <h1>Almost done.</h1>
+    <div class="pick">Your time: <b id="pickText"></b><br><a href="#" id="change">Pick a different time</a></div>
+    <div class="f"><label for="name">Your name</label><input id="name" autocomplete="name" placeholder="First and last name"></div>
+    <div class="f"><label for="phone">Best number to call</label><input id="phone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="(801) 555-1234"></div>
+    <div class="f"><label for="email">Email (for your calendar invite)</label><input id="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
+    <div class="f"><label for="state">State</label><select id="state"><option value="">Choose your state</option></select></div>
+    <div class="hp"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div>
+    <button class="btn" id="book">Book this time</button>
+    <div class="msg err" id="err"></div>
+  </div>
+
+  <div id="done" class="done" hidden>
+    <div class="check">&#10003;</div>
+    <h2>You're booked.</h2>
+    <p><b id="doneWhen"></b></p>
+    <p>Parker will call you at <b id="donePhone"></b>.</p>
+    <p id="doneInvite" hidden>A calendar invite is on its way to <b id="doneEmail"></b>.</p>
+    <p>Need a different time? Text Parker at <a href="sms:+18015577501">(801) 557-7501</a>.</p>
+  </div>
+
+  <div class="foot">Parker Marquis &middot; Licensed Life Insurance Agent &middot; NPN 22289941<br>Verify any agent's license at nipr.com</div>
+</div>
+
+<script>
+(function () {
+  // The calendar bridge (Apps Script) is the API. Cross-origin calls carry no Google cookies,
+  // so the multi-account "unable to open the file" wall never applies here.
+  var API = "https://script.google.com/macros/s/AKfycbx4CtcSGCs41X6DO1PJ38BxDHLTQWjvWVWEWREhN7I_ZaCmcpOsHYRnpMNtRY3UPmqg/exec";
+  var FALLBACK = "Please text Parker at (801) 557-7501.";
+  var STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+  var $ = function (id) { return document.getElementById(id); };
+  var tz = "";
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
+  var tzLabel = (function () {
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", { timeZoneName: "short" }).formatToParts(new Date());
+      for (var i = 0; i < parts.length; i++) { if (parts[i].type === "timeZoneName") return parts[i].value; }
+    } catch (e) {}
+    return tz || "your local time";
+  })();
+  $("tzname").textContent = tzLabel;
+
+  var byDay = {}, dayKeys = [], curDay = null, curSlot = null;
+  var fmtDay = new Intl.DateTimeFormat("en-US", { weekday: "short" });
+  var fmtNum = new Intl.DateTimeFormat("en-US", { day: "numeric" });
+  var fmtMon = new Intl.DateTimeFormat("en-US", { month: "short" });
+  var fmtTime = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" });
+  var fmtLong = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+  var fmtKey = new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" });
+
+  function getSlots() {
+    return fetch(API + "?slots=1&_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); });
+  }
+  function postBooking(p) {
+    // Plain-text body = no CORS preflight; the bridge answers JSON after Google's redirect.
+    return fetch(API, { method: "POST", body: JSON.stringify(p) }).then(function (r) { return r.json(); });
+  }
+
+  function load() {
+    $("loading").hidden = false; $("loading").textContent = "Finding open times…"; $("picker").hidden = true;
+    getSlots().then(render).catch(fail);
+  }
+  function fail() { $("loading").hidden = false; $("loading").textContent = "We couldn't load open times. " + FALLBACK; }
+  function render(r) {
+    var slots = (r && r.slots) || []; byDay = {}; dayKeys = [];
+    slots.forEach(function (iso) {
+      var d = new Date(iso); var k = fmtKey.format(d);
+      if (!byDay[k]) { byDay[k] = []; dayKeys.push(k); }
+      byDay[k].push(d);
+    });
+    if (!dayKeys.length) { $("loading").textContent = "No open times right now. " + FALLBACK; return; }
+    $("loading").hidden = true; $("picker").hidden = false;
+    var days = $("days"); days.innerHTML = "";
+    dayKeys.forEach(function (k) {
+      var d = byDay[k][0];
+      var el = document.createElement("div"); el.className = "day"; el.setAttribute("data-k", k);
+      el.innerHTML = "<small>" + fmtDay.format(d) + "</small><b>" + fmtNum.format(d) + "</b><small>" + fmtMon.format(d) + "</small>";
+      el.onclick = function () { pickDay(k); };
+      days.appendChild(el);
+    });
+    pickDay(curDay && byDay[curDay] ? curDay : dayKeys[0]);
+  }
+  function pickDay(k) {
+    curDay = k;
+    var kids = $("days").children;
+    for (var i = 0; i < kids.length; i++) { kids[i].className = "day" + (kids[i].getAttribute("data-k") === k ? " on" : ""); }
+    var times = $("times"); times.innerHTML = "";
+    byDay[k].forEach(function (d) {
+      var el = document.createElement("div"); el.className = "t"; el.textContent = fmtTime.format(d);
+      el.onclick = function () { pickSlot(d); };
+      times.appendChild(el);
+    });
+  }
+  function pickSlot(d) {
+    curSlot = d;
+    $("pickText").textContent = fmtLong.format(d);
+    $("step1").hidden = true; $("step2").hidden = false; $("err").textContent = "";
+    window.scrollTo(0, 0);
+  }
+  $("change").onclick = function (e) { e.preventDefault(); $("step2").hidden = true; $("step1").hidden = false; };
+
+  var sel = $("state");
+  STATES.forEach(function (s) { var o = document.createElement("option"); o.value = s; o.textContent = s; sel.appendChild(o); });
+
+  $("phone").addEventListener("input", function () {
+    var v = this.value.replace(/\D/g, "");
+    if (v.length === 11 && v.charAt(0) === "1") v = v.slice(1);
+    v = v.slice(0, 10);
+    if (v.length > 6) this.value = "(" + v.slice(0, 3) + ") " + v.slice(3, 6) + "-" + v.slice(6);
+    else if (v.length > 3) this.value = "(" + v.slice(0, 3) + ") " + v.slice(3);
+    else this.value = v;
+  });
+
+  function reset() { $("book").disabled = false; $("book").textContent = "Book this time"; }
+
+  $("book").onclick = function () {
+    var p = { action: "book", name: $("name").value, phone: $("phone").value, email: $("email").value, state: $("state").value,
+              website: $("website").value, slot: curSlot ? curSlot.toISOString() : "", visitorTz: tz };
+    if (p.name.trim().length < 2) { $("err").textContent = "Please enter your first and last name."; return; }
+    if (p.phone.replace(/\D/g, "").length !== 10) { $("err").textContent = "Please enter a 10-digit phone number."; return; }
+    $("err").textContent = ""; $("book").disabled = true; $("book").textContent = "Booking…";
+    postBooking(p).then(function (r) {
+      reset();
+      if (!r || !r.ok) {
+        $("err").textContent = (r && r.error) || ("Something went wrong. " + FALLBACK);
+        if (r && r.refresh) { curSlot = null; $("step2").hidden = true; $("step1").hidden = false; load(); }
+        return;
+      }
+      $("doneWhen").textContent = fmtLong.format(new Date(r.start));
+      $("donePhone").textContent = p.phone;
+      if (r.invited) { $("doneEmail").textContent = p.email.trim(); $("doneInvite").hidden = false; }
+      $("step2").hidden = true; $("done").hidden = false; window.scrollTo(0, 0);
+    }).catch(function () {
+      reset();
+      $("err").textContent = "We couldn't save that time. " + FALLBACK;
+    });
+  };
+
+  load();
+})();
+</script>
+</body>
+</html>
