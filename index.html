@@ -44,6 +44,7 @@
   .foot { margin-top:26px; font-size:12px; color:var(--muted); text-align:center; line-height:1.5; }
   .hp { position:absolute; left:-9999px; top:-9999px; }
   .spin { color:var(--muted); font-size:15px; padding:20px 0; }
+  .tzsel { font-size:15px; padding:6px 28px 6px 10px; border:1px solid var(--line); border-radius:8px; background:var(--card) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%235f6673'/></svg>") no-repeat right 10px center; color:var(--navy); -webkit-appearance:none; appearance:none; font-weight:600; }
   a { color:var(--navy); }
   [hidden] { display:none !important; }
 </style>
@@ -57,7 +58,7 @@
 
   <div id="step1">
     <h1>Pick a time for your call.</h1>
-    <p class="sub">Parker will call you at the time you pick. Times are shown in your time zone (<span id="tzname"></span>).</p>
+    <p class="sub">Parker will call you at the time you pick. Times shown in <select id="tz" class="tzsel" aria-label="Your time zone"></select></p>
     <div id="loading" class="spin">Finding open times&hellip;</div>
     <div id="picker" hidden>
       <div class="lbl">Day</div>
@@ -99,24 +100,39 @@
   var FALLBACK = "Please text Parker at (801) 557-7501.";
   var STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
   var $ = function (id) { return document.getElementById(id); };
+  var ZONES = [
+    ["America/New_York", "Eastern Time"], ["America/Chicago", "Central Time"], ["America/Denver", "Mountain Time"],
+    ["America/Phoenix", "Arizona (no DST)"], ["America/Los_Angeles", "Pacific Time"], ["Pacific/Honolulu", "Hawaii Time"]
+  ];
   var tz = "";
   try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
-  var tzLabel = (function () {
-    try {
-      var parts = new Intl.DateTimeFormat("en-US", { timeZoneName: "short" }).formatToParts(new Date());
-      for (var i = 0; i < parts.length; i++) { if (parts[i].type === "timeZoneName") return parts[i].value; }
-    } catch (e) {}
-    return tz || "your local time";
-  })();
-  $("tzname").textContent = tzLabel;
+  var ALIAS = { "America/Detroit": "America/New_York", "America/Kentucky/Louisville": "America/New_York", "America/Indiana/Indianapolis": "America/New_York",
+                "America/Boise": "America/Denver", "America/Indiana/Knox": "America/Chicago", "America/Menominee": "America/Chicago",
+                "America/North_Dakota/Center": "America/Chicago", "US/Eastern": "America/New_York", "US/Central": "America/Chicago",
+                "US/Mountain": "America/Denver", "US/Arizona": "America/Phoenix", "US/Pacific": "America/Los_Angeles", "US/Hawaii": "Pacific/Honolulu" };
+  if (ALIAS[tz]) tz = ALIAS[tz];
+  var inList = ZONES.some(function (z) { return z[0] === tz; });
+  if (!tz || !inList) {
+    // a visitor outside the six (Alaska, overseas): keep their real zone as an extra option, or fall back to Mountain
+    if (tz) { var label = tz; try { var p2 = new Intl.DateTimeFormat("en-US", { timeZone: tz, timeZoneName: "long" }).formatToParts(new Date()); for (var q = 0; q < p2.length; q++) { if (p2[q].type === "timeZoneName") label = p2[q].value; } } catch (e) {} ZONES.push([tz, label]); }
+    else { tz = "America/Denver"; }
+  }
+  var tzSel = $("tz");
+  ZONES.forEach(function (z) { var o = document.createElement("option"); o.value = z[0]; o.textContent = z[1]; if (z[0] === tz) o.selected = true; tzSel.appendChild(o); });
+  function fmt(opts) { opts.timeZone = tz; return new Intl.DateTimeFormat("en-US", opts); }
+  var fmtDay, fmtNum, fmtMon, fmtTime, fmtLong, fmtKey;
+  function buildFormats() {
+    fmtDay = fmt({ weekday: "short" }); fmtNum = fmt({ day: "numeric" }); fmtMon = fmt({ month: "short" });
+    fmtTime = fmt({ hour: "numeric", minute: "2-digit" });
+    fmtLong = fmt({ weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+    fmtKey = fmt({ year: "numeric", month: "2-digit", day: "2-digit" });
+    fmtKey = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
+  }
+  buildFormats();
+  tzSel.onchange = function () { tz = tzSel.value; buildFormats(); if (lastSlots) render({ slots: lastSlots }); if (curSlot) $("pickText").textContent = fmtLong.format(curSlot); };
+  var lastSlots = null;
 
   var byDay = {}, dayKeys = [], curDay = null, curSlot = null;
-  var fmtDay = new Intl.DateTimeFormat("en-US", { weekday: "short" });
-  var fmtNum = new Intl.DateTimeFormat("en-US", { day: "numeric" });
-  var fmtMon = new Intl.DateTimeFormat("en-US", { month: "short" });
-  var fmtTime = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" });
-  var fmtLong = new Intl.DateTimeFormat("en-US", { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-  var fmtKey = new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" });
 
   function getSlots() {
     return fetch(API + "?slots=1&_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); });
@@ -132,7 +148,7 @@
   }
   function fail() { $("loading").hidden = false; $("loading").textContent = "We couldn't load open times. " + FALLBACK; }
   function render(r) {
-    var slots = (r && r.slots) || []; byDay = {}; dayKeys = [];
+    var slots = (r && r.slots) || []; lastSlots = slots; byDay = {}; dayKeys = [];
     slots.forEach(function (iso) {
       var d = new Date(iso); var k = fmtKey.format(d);
       if (!byDay[k]) { byDay[k] = []; dayKeys.push(k); }
