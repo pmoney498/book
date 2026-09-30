@@ -116,7 +116,7 @@
   // Times are shown in the visitor's own time zone, read from the device. No picker (Parker, 2026-09-29).
   var tz = "";
   try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) {}
-  if (!tz) tz = "America/Denver";
+  if (!tz) tz = "America/New_York";   // fallback = Eastern (most of Parker's clients), Parker 2026-09-29
   var tzLabel = tz;
   try {
     var parts = new Intl.DateTimeFormat("en-US", { timeZone: tz, timeZoneName: "short" }).formatToParts(new Date());
