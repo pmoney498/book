@@ -6,16 +6,16 @@
 <meta name="robots" content="noindex">
 <title>Book a call with Parker Marquis</title>
 <style>
-  :root { --navy:#0f2340; --gold:#c9a962; --ink:#1b1f26; --muted:#5f6673; --bg:#f7f5f0; --card:#ffffff; --line:#e4e0d6; --ok:#1f6b47; --err:#9b2c2c; }
+  :root { --navy:#1C4842; --teal:#146559; --gold:#FCC52D; --ink:#344532; --muted:#6B7280; --soft:#8B9693; --bg:#F6F7F4; --card:#ffffff; --line:#E3E6E1; --ok:#146559; --err:#9b2c2c; }
   * { box-sizing:border-box; }
-  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:Arial,Helvetica,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:520px; margin:0 auto; padding:20px 16px 48px; }
   .head { display:flex; align-items:center; gap:14px; padding:6px 0 18px; border-bottom:1px solid var(--line); }
   .mono { width:52px; height:52px; border-radius:50%; background:var(--navy); color:var(--gold); display:flex; align-items:center; justify-content:center; font-family:Georgia,"Times New Roman",serif; font-size:20px; letter-spacing:1px; flex:none; }
   .who { line-height:1.25; }
   .who b { display:block; font-size:17px; color:var(--navy); }
   .who span { font-size:13px; color:var(--muted); }
-  h1 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:26px; color:var(--navy); margin:22px 0 6px; }
+  h1 { font-weight:700; font-size:24px; color:var(--navy); margin:24px 0 6px; letter-spacing:.2px; }
   .sub { color:var(--muted); font-size:15px; margin:0 0 18px; line-height:1.4; }
   .lbl { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:18px 0 8px; }
   .days { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch; }
@@ -39,9 +39,20 @@
   .msg.err { color:var(--err); }
   .done { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 18px; margin-top:20px; }
   .done .check { width:44px; height:44px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:12px; }
-  .done h2 { font-family:Georgia,"Times New Roman",serif; font-weight:500; color:var(--navy); margin:0 0 8px; font-size:22px; }
+  .done h2 { font-weight:700; color:var(--navy); margin:0 0 8px; font-size:21px; }
   .done p { margin:6px 0; font-size:15px; line-height:1.45; }
-  .foot { margin-top:26px; font-size:12px; color:var(--muted); text-align:center; line-height:1.5; }
+  .foot { margin-top:28px; font-size:11px; color:var(--soft); text-align:center; line-height:1.7; }
+  .foot a { color:var(--soft); }
+  .sig { border-left:3px solid var(--gold); padding:4px 0 4px 15px; margin:8px 0 2px; }
+  .sig-name { font-size:18px; font-weight:700; color:var(--navy); letter-spacing:.2px; }
+  .sig-title { font-size:11px; color:var(--teal); text-transform:uppercase; letter-spacing:1.2px; padding:4px 0 8px; }
+  .sig-line { font-size:13px; color:var(--ink); line-height:1.7; }
+  .sig-line a { color:var(--ink); text-decoration:none; }
+  .sig-npn { font-size:11px; color:var(--muted); line-height:1.8; }
+  .sig-brand { display:flex; align-items:center; gap:7px; margin-top:8px; }
+  .sig-brand img { display:block; width:22px; height:22px; }
+  .sig-brand b { font-size:14px; color:var(--navy); }
+  .sig-brand span { font-size:11.5px; color:var(--teal); }
   .hp { position:absolute; left:-9999px; top:-9999px; }
   .spin { color:var(--muted); font-size:15px; padding:20px 0; }
   .tzsel { font-size:15px; padding:6px 28px 6px 10px; border:1px solid var(--line); border-radius:8px; background:var(--card) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%235f6673'/></svg>") no-repeat right 10px center; color:var(--navy); -webkit-appearance:none; appearance:none; font-weight:600; }
@@ -51,9 +62,12 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="head">
-    <div class="mono">PM</div>
-    <div class="who"><b>Parker Marquis</b><span>Licensed Life Insurance Agent &middot; NPN 22289941</span></div>
+  <div class="sig">
+    <div class="sig-name">Parker Marquis</div>
+    <div class="sig-title">Licensed Mortgage Protection &amp; Life Insurance Agent</div>
+    <div class="sig-line"><a href="tel:8015577501">(801) 557-7501</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="mailto:parkermarquis.ins@gmail.com">parkermarquis.ins@gmail.com</a></div>
+    <div class="sig-npn">NPN 22289941</div>
+    <div class="sig-brand"><b>EverLife</b><span>Your future, covered.</span></div>
   </div>
 
   <div id="step1">
@@ -89,7 +103,7 @@
     <p>Need a different time? Text Parker at <a href="sms:+18015577501">(801) 557-7501</a>.</p>
   </div>
 
-  <div class="foot">Parker Marquis &middot; Licensed Life Insurance Agent &middot; NPN 22289941<br>Verify any agent's license at nipr.com</div>
+  <div class="foot">Appointed with American-Amicable &middot; Americo &middot; Transamerica<br>Verify my license anytime at <a href="https://nipr.com">nipr.com</a></div>
 </div>
 
 <script>
