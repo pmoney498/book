@@ -2,77 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#F7F7F5">
 <title>Book a call with Parker Marquis</title>
 <style>
-  :root { --navy:#1C4842; --teal:#146559; --gold:#FCC52D; --ink:#344532; --muted:#6B7280; --soft:#8B9693; --bg:#F6F7F4; --card:#ffffff; --line:#E3E6E1; --ok:#146559; --err:#9b2c2c; }
+  :root {
+    --accent:#1C4842; --accent-2:#245C54; --ring:rgba(28,72,66,.18);
+    --ink:#111827; --ink-2:#4B5563; --muted:#6B7280; --faint:#9CA3AF;
+    --bg:#F7F7F5; --card:#FFFFFF; --line:#E5E7EB; --line-2:#D1D5DB;
+    --ok:#15803D; --err:#B91C1C;
+  }
   * { box-sizing:border-box; }
-  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:Arial,Helvetica,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
-  .wrap { max-width:520px; margin:0 auto; padding:20px 16px 48px; }
-  .head { display:flex; align-items:center; gap:14px; padding:6px 0 18px; border-bottom:1px solid var(--line); }
-  .mono { width:52px; height:52px; border-radius:50%; background:var(--navy); color:var(--gold); display:flex; align-items:center; justify-content:center; font-family:Georgia,"Times New Roman",serif; font-size:20px; letter-spacing:1px; flex:none; }
-  .who { line-height:1.25; }
-  .who b { display:block; font-size:17px; color:var(--navy); }
-  .who span { font-size:13px; color:var(--muted); }
-  h1 { font-weight:700; font-size:24px; color:var(--navy); margin:24px 0 6px; letter-spacing:.2px; }
-  .sub { color:var(--muted); font-size:15px; margin:0 0 18px; line-height:1.4; }
-  .lbl { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:18px 0 8px; }
-  .days { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; -webkit-overflow-scrolling:touch; }
-  .day { flex:none; width:64px; padding:10px 0; border:1px solid var(--line); border-radius:12px; background:var(--card); text-align:center; cursor:pointer; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; line-height:1.4; }
+  .wrap { max-width:460px; margin:0 auto; padding:20px 20px 48px; }
+  .top { display:flex; align-items:center; gap:12px; padding:4px 0 20px; }
+  .avatar { width:40px; height:40px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; letter-spacing:.04em; flex:none; }
+  .top b { display:block; font-size:15px; font-weight:600; color:var(--ink); }
+  .top span { display:block; font-size:12.5px; color:var(--muted); margin-top:1px; }
+  h1 { font-size:27px; line-height:1.15; font-weight:650; letter-spacing:-.015em; color:var(--ink); margin:8px 0 8px; }
+  .sub { color:var(--muted); font-size:15px; margin:0 0 4px; }
+  .lbl { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin:22px 0 10px; }
+  .days { display:flex; gap:8px; overflow-x:auto; padding:2px 2px 6px; margin:0 -2px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .days::-webkit-scrollbar { display:none; }
+  .day { flex:none; width:66px; padding:10px 0 9px; border:1px solid var(--line); border-radius:12px; background:var(--card); text-align:center; cursor:pointer; font:inherit; color:var(--ink); }
   .day small { display:block; font-size:12px; color:var(--muted); }
-  .day b { display:block; font-size:18px; color:var(--navy); font-weight:600; }
-  .day.on { border-color:var(--navy); background:var(--navy); }
-  .day.on small, .day.on b { color:#fff; }
+  .day b { display:block; font-size:20px; font-weight:600; line-height:1.2; margin:2px 0; }
+  .day em { display:block; font-style:normal; font-size:11px; color:var(--faint); }
+  .day.on { border-color:var(--accent); background:var(--accent); }
+  .day.on small, .day.on b, .day.on em { color:#fff; }
   .times { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .t { padding:12px 0; border:1px solid var(--line); border-radius:10px; background:var(--card); text-align:center; font-size:15px; cursor:pointer; color:var(--navy); }
-  .t:active { background:var(--gold); }
-  .f { margin-bottom:12px; }
-  .f label { display:block; font-size:13px; color:var(--muted); margin-bottom:5px; }
-  .f input, .f select { width:100%; font-size:16px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); -webkit-appearance:none; appearance:none; }
-  .f input:focus, .f select:focus { outline:none; border-color:var(--navy); }
-  .btn { width:100%; padding:15px; border:0; border-radius:12px; background:var(--navy); color:#fff; font-size:17px; font-weight:600; cursor:pointer; margin-top:6px; }
-  .btn[disabled] { opacity:.55; cursor:default; }
-  .pick { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:15px; margin:14px 0 14px; line-height:1.4; }
-  .pick b { color:var(--navy); }
+  .t { height:46px; border:1px solid var(--line); border-radius:10px; background:var(--card); font:inherit; font-size:15px; font-weight:500; color:var(--ink); cursor:pointer; }
+  .t:hover { border-color:var(--line-2); }
+  .t:active, .t.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .day:focus-visible, .t:focus-visible, .btn:focus-visible, input:focus-visible { outline:none; box-shadow:0 0 0 3px var(--ring); }
+  .skel { display:flex; gap:8px; overflow:hidden; }
+  .skel i, .skel-t i { display:block; background:linear-gradient(90deg,#ECECEA 25%,#F4F4F2 50%,#ECECEA 75%); background-size:200% 100%; animation:sh 1.2s infinite; border-radius:12px; }
+  .skel i { width:66px; height:68px; flex:none; }
+  .skel-t { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:34px; }
+  .skel-t i { height:46px; border-radius:10px; }
+  @keyframes sh { 0% { background-position:200% 0; } 100% { background-position:-200% 0; } }
+  .loadmsg { color:var(--muted); font-size:15px; padding:16px 0; }
+  .summary { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:8px 0 20px; }
+  .summary .when b { display:block; font-size:16px; font-weight:600; color:var(--ink); }
+  .summary .when span { display:block; font-size:14px; color:var(--muted); margin-top:2px; }
+  .summary a { font-size:14px; font-weight:500; color:var(--accent); text-decoration:none; white-space:nowrap; }
+  .f { margin-bottom:14px; }
+  .f label { display:block; font-size:13px; font-weight:500; color:var(--ink-2); margin-bottom:6px; }
+  .f input, .f select { width:100%; height:48px; font:inherit; font-size:16px; padding:0 14px; border:1px solid var(--line-2); border-radius:10px; background:var(--card); color:var(--ink); -webkit-appearance:none; appearance:none; }
+  .f select { background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+  .f input::placeholder { color:var(--faint); }
+  .f input:focus, .f select:focus { border-color:var(--accent); }
+  .hint { font-size:12.5px; color:var(--faint); margin-top:6px; }
+  .btn { width:100%; height:52px; border:0; border-radius:12px; background:var(--accent); color:#fff; font:inherit; font-size:16px; font-weight:600; cursor:pointer; margin-top:8px; }
+  .btn:hover { background:var(--accent-2); }
+  .btn[disabled] { opacity:.6; cursor:default; }
   .msg { font-size:14px; margin-top:10px; min-height:18px; }
   .msg.err { color:var(--err); }
-  .done { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 18px; margin-top:20px; }
-  .done .check { width:44px; height:44px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:12px; }
-  .done h2 { font-weight:700; color:var(--navy); margin:0 0 8px; font-size:21px; }
-  .done p { margin:6px 0; font-size:15px; line-height:1.45; }
-  .foot { margin-top:28px; font-size:11px; color:var(--soft); text-align:center; line-height:1.7; }
-  .foot a { color:var(--soft); }
-  .sig { border-left:3px solid var(--gold); padding:4px 0 4px 15px; margin:8px 0 2px; }
-  .sig-name { font-size:18px; font-weight:700; color:var(--navy); letter-spacing:.2px; }
-  .sig-title { font-size:11px; color:var(--teal); text-transform:uppercase; letter-spacing:1.2px; padding:4px 0 8px; }
-  .sig-line { font-size:13px; color:var(--ink); line-height:1.7; }
-  .sig-line a { color:var(--ink); text-decoration:none; }
-  .sig-npn { font-size:11px; color:var(--muted); line-height:1.8; }
-  .sig-brand { display:flex; align-items:center; gap:7px; margin-top:8px; }
-  .sig-brand img { display:block; width:22px; height:22px; }
-  .sig-brand b { font-size:14px; color:var(--navy); }
-  .sig-brand span { font-size:11.5px; color:var(--teal); }
+  .done { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:26px 20px; margin-top:12px; text-align:center; }
+  .done .check { width:52px; height:52px; border-radius:50%; background:#DCFCE7; color:var(--ok); display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 14px; }
+  .done h2 { font-size:23px; font-weight:650; letter-spacing:-.01em; color:var(--ink); margin:0 0 6px; }
+  .done .when { font-size:16px; color:var(--ink); margin:0 0 14px; }
+  .done .when b { display:block; font-size:17px; font-weight:600; }
+  .done p { margin:6px 0; font-size:14.5px; color:var(--muted); }
+  .done a { color:var(--accent); font-weight:500; text-decoration:none; }
+  .foot { margin-top:32px; font-size:12px; color:var(--faint); text-align:center; line-height:1.7; }
+  .foot a { color:var(--faint); }
   .hp { position:absolute; left:-9999px; top:-9999px; }
-  .spin { color:var(--muted); font-size:15px; padding:20px 0; }
-  a { color:var(--navy); }
   [hidden] { display:none !important; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="sig">
-    <div class="sig-name">Parker Marquis</div>
-    <div class="sig-title">Licensed Mortgage Protection &amp; Life Insurance Agent</div>
-    <div class="sig-line"><a href="tel:8015577501">(801) 557-7501</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="mailto:parkermarquis.ins@gmail.com">parkermarquis.ins@gmail.com</a></div>
-    <div class="sig-npn">NPN 22289941</div>
-    <div class="sig-brand"><img src="https://framerusercontent.com/images/L1Ig0mQOWbX3g6Yq5mKnOvStZs.png" alt="EverLife" width="22" height="22"><b>EverLife</b><span>Your future, covered.</span></div>
+  <div class="top">
+    <div class="avatar">PM</div>
+    <div><b>Parker Marquis</b><span>Licensed Life &amp; Mortgage Protection Agent</span></div>
   </div>
 
   <div id="step1">
     <h1>Pick a time for your call.</h1>
-    <p class="sub">Parker will call you at the time you pick. Times are shown in your time zone (<span id="tzname"></span>).</p>
-    <div id="loading" class="spin">Finding open times&hellip;</div>
+    <p class="sub">Parker will call you at the time you choose. Times are in your time zone (<span id="tzname"></span>).</p>
+    <div id="loading">
+      <div class="lbl">Day</div>
+      <div class="skel"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="skel-t"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div id="loadmsg" class="loadmsg" hidden></div>
     <div id="picker" hidden>
       <div class="lbl">Day</div>
       <div class="days" id="days"></div>
@@ -83,10 +99,13 @@
 
   <div id="step2" hidden>
     <h1>Almost done.</h1>
-    <div class="pick">Your time: <b id="pickText"></b><br><a href="#" id="change">Pick a different time</a></div>
+    <div class="summary">
+      <div class="when"><b id="pickDay"></b><span id="pickTime"></span></div>
+      <a href="#" id="change">Change</a>
+    </div>
     <div class="f"><label for="name">Your name</label><input id="name" autocomplete="name" placeholder="First and last name"></div>
     <div class="f"><label for="phone">Best number to call</label><input id="phone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="(801) 555-1234"></div>
-    <div class="f"><label for="email">Email (for your calendar invite)</label><input id="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
+    <div class="f"><label for="email">Email</label><input id="email" type="email" autocomplete="email" placeholder="you@email.com"><div class="hint">Optional. We'll send a calendar invite.</div></div>
     <div class="f"><label for="state">State</label><select id="state"><option value="">Choose your state</option></select></div>
     <div class="hp"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div>
     <button class="btn" id="book">Book this time</button>
@@ -96,13 +115,13 @@
   <div id="done" class="done" hidden>
     <div class="check">&#10003;</div>
     <h2>You're booked.</h2>
-    <p><b id="doneWhen"></b></p>
+    <div class="when"><b id="doneWhen"></b></div>
     <p>Parker will call you at <b id="donePhone"></b>.</p>
     <p id="doneInvite" hidden>A calendar invite is on its way to <b id="doneEmail"></b>.</p>
-    <p>Need a different time? Text Parker at <a href="sms:+18015577501">(801) 557-7501</a>.</p>
+    <p>Need a different time? <a href="sms:+18015577501">Text Parker at (801) 557-7501</a></p>
   </div>
 
-  <div class="foot">Verify my license anytime at <a href="https://nipr.com">nipr.com</a></div>
+  <div class="foot">Parker Marquis &middot; NPN 22289941<br><a href="https://nipr.com">Verify my license at nipr.com</a></div>
 </div>
 
 <script>
@@ -125,6 +144,7 @@
   $("tzname").textContent = tzLabel;
   function fmt(opts) { opts.timeZone = tz; return new Intl.DateTimeFormat("en-US", opts); }
   var fmtDay = fmt({ weekday: "short" }), fmtNum = fmt({ day: "numeric" }), fmtMon = fmt({ month: "short" });
+  var fmtDayLong = fmt({ weekday: "long", month: "long", day: "numeric" });
   var fmtTime = fmt({ hour: "numeric", minute: "2-digit" });
   var fmtLong = fmt({ weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
   var fmtKey = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
@@ -141,10 +161,10 @@
   }
 
   function load() {
-    $("loading").hidden = false; $("loading").textContent = "Finding open times…"; $("picker").hidden = true;
+    $("loading").hidden = false; $("loadmsg").hidden = true; $("picker").hidden = true;
     getSlots().then(render).catch(fail);
   }
-  function fail() { $("loading").hidden = false; $("loading").textContent = "We couldn't load open times. " + FALLBACK; }
+  function fail() { $("loading").hidden = true; $("loadmsg").hidden = false; $("loadmsg").textContent = "We couldn't load open times. " + FALLBACK; }
   function render(r) {
     var slots = (r && r.slots) || []; lastSlots = slots; byDay = {}; dayKeys = [];
     slots.forEach(function (iso) {
@@ -152,13 +172,13 @@
       if (!byDay[k]) { byDay[k] = []; dayKeys.push(k); }
       byDay[k].push(d);
     });
-    if (!dayKeys.length) { $("loading").textContent = "No open times right now. " + FALLBACK; return; }
-    $("loading").hidden = true; $("picker").hidden = false;
+    if (!dayKeys.length) { $("loading").hidden = true; $("loadmsg").hidden = false; $("loadmsg").textContent = "No open times right now. " + FALLBACK; return; }
+    $("loading").hidden = true; $("loadmsg").hidden = true; $("picker").hidden = false;
     var days = $("days"); days.innerHTML = "";
     dayKeys.forEach(function (k) {
       var d = byDay[k][0];
-      var el = document.createElement("div"); el.className = "day"; el.setAttribute("data-k", k);
-      el.innerHTML = "<small>" + fmtDay.format(d) + "</small><b>" + fmtNum.format(d) + "</b><small>" + fmtMon.format(d) + "</small>";
+      var el = document.createElement("button"); el.type = "button"; el.className = "day"; el.setAttribute("data-k", k);
+      el.innerHTML = "<small>" + fmtDay.format(d) + "</small><b>" + fmtNum.format(d) + "</b><em>" + fmtMon.format(d) + "</em>";
       el.onclick = function () { pickDay(k); };
       days.appendChild(el);
     });
@@ -170,14 +190,15 @@
     for (var i = 0; i < kids.length; i++) { kids[i].className = "day" + (kids[i].getAttribute("data-k") === k ? " on" : ""); }
     var times = $("times"); times.innerHTML = "";
     byDay[k].forEach(function (d) {
-      var el = document.createElement("div"); el.className = "t"; el.textContent = fmtTime.format(d);
+      var el = document.createElement("button"); el.type = "button"; el.className = "t"; el.textContent = fmtTime.format(d);
       el.onclick = function () { pickSlot(d); };
       times.appendChild(el);
     });
   }
   function pickSlot(d) {
     curSlot = d;
-    $("pickText").textContent = fmtLong.format(d);
+    $("pickDay").textContent = fmtDayLong.format(d);
+    $("pickTime").textContent = fmtTime.format(d) + " " + tzLabel;
     $("step1").hidden = true; $("step2").hidden = false; $("err").textContent = "";
     window.scrollTo(0, 0);
   }
